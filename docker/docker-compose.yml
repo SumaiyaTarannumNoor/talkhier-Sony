@@ -1,0 +1,9 @@
+services:
+  python3:
+    restart: always
+    build: .
+    container_name: 'talkhier'
+    working_dir: '/root/'
+    tty: true
+    volumes:
+      - ../:/root/TalkHier:z
