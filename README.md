@@ -1,7 +1,7 @@
 # Talk Structurally, Act Hierarchically: A Collaborative Framework for LLM Multi-Agent Systems
 
 ## Overview
-This repository contains the official implementation of the multi-agent LLM system described in the paper **“Talk Structurally, Act Hierarchically: A Collaborative Framework for LLM Multi-Agent Systems”** by Zhao Wang, Moriyama Sota, Wei-Yao Wang, and Briti Gangopadhyay. For simplicity, we refer to our model as ***TalkHier***. ***TalkHier*** models hierarchical agent communication to efficiently solve complex tasks by leveraging structured conversations. It introduces a novel framework that establishes a structured communication protocol for context-rich exchanges and a hierarchical refinement system to address issues such as incorrect outputs, falsehoods, and biases.
+This repository contains the official implementation of the multi-agent LLM system described in the paper **“Talk Structurally, Act Hierarchically: A Collaborative Framework for LLM Multi-Agent Systems”** by Zhao Wang, Moriyama Sota, Wei-Yao Wang, Briti Gangopadhyay and Shingo Takamatsu. For simplicity, we refer to our model as ***TalkHier***. ***TalkHier*** models hierarchical agent communication to efficiently solve complex tasks by leveraging structured conversations. It introduces a novel framework that establishes a structured communication protocol for context-rich exchanges and a hierarchical refinement system to address issues such as incorrect outputs, falsehoods, and biases.
 
 ## Architecture
 ![Example Figure](./architecture.png)
