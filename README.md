@@ -48,6 +48,11 @@ To run the system, execute the following command:
 python experiments.py --mode [Problem]
 ```
 
+For instance, if you want to run Moral_Scenerio in MMLU benchmark, run: 
+```sh
+python experiments.py --mode moral_scenerio
+```
+
 ### Configuration
 Modify `config/config_llm.ini` and add the keys.
 
