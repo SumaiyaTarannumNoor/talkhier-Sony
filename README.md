@@ -32,8 +32,9 @@ pip install -r requirements.txt
 ### Docker Compose Installation
 To set up the system using Docker Compose:
 ```sh
-# Clone the repository
-git clone https://github.com/SotaMoriyamaS/TalkHier.git
+# 1. Unzip the zip file
+
+# 2. Enter the folder
 cd TalkHier/docker
 
 # Build and start the container
