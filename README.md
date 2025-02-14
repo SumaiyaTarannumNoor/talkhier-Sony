@@ -21,15 +21,16 @@ Each task defines its own **graph-based structure**, ensuring that communication
 ### Manual Installation
 To set up the environment manually, follow these steps:
 ```sh
-# Clone the repository
-git clone https://github.com/SotaMoriyamaS/TalkHier.git
+# 1. Unzip the zip file
+
+# 2. Enter the folder
 cd TalkHier
 
-# Create a virtual environment
+# 3. Create a virtual environment
 python -m venv env
 source env/bin/activate  # On Windows use `env\\Scripts\\activate`
 
-# Install dependencies
+# 4. Install dependencies
 pip install -r requirements.txt
 ```
 
