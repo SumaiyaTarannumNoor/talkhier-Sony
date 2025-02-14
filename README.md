@@ -48,11 +48,6 @@ To run the system, execute the following command:
 python experiments.py --mode [Problem]
 ```
 
-For instance, if you want to run moral_scenarios dataset in MMLU benchmark, run: 
-```sh
-python experiments.py --mode moral_scenarios
-```
-
 ### Configuration
 Modify `config/config_llm.ini` and add the keys.
 
