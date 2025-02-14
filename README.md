@@ -63,6 +63,16 @@ OPENAI_ENDPOINT = *************************************
 
 **Need to replace your own key**
 
+```sh
+[LLM]
+
+deployment_name=*******
+
+openai_api_version=**********
+```
+**Need to set up Open AI API version**
+
+
 ## Examples
 To test the system with a predefined task:
 ```sh
