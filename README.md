@@ -49,6 +49,17 @@ The table reports **Rouge-1** and **BERTScore** for various models.
 | o1-preview  | 0.2631     | 0.5701       |
 | ***TalkHier (Ours)***| **0.3461** | **0.6079**   |
 
+## Evaluation Results on Camera Dataset
+
+We report **BLEU-4 (B4), ROUGE-1 (R1), BERTScore (BERT), and domain-specific metrics** (Faithfulness, Fluency, Attractiveness, Character Count Violation (CCV)) following [CyberAgent Camera](#).
+
+| **Models**         | **B4 (↑)** | **R1 (↑)** | **BERT (↑)** | **Faithfulness (↑)** | **Fluency (↑)** | **Attractiveness (↑)** | **CCV (↓)**  |
+|--------------------|---------|---------|---------|--------------|---------|--------------|---------|
+| **GPT-4o**        | 0.01    | 0.02    | 0.65    | 4.8          | 5.9     | 6.5          | 16%     |
+| **ReAct**         | 0.01    | 0.01    | 0.70    | 4.9          | 6.4     | **7.0**      | 17%     |
+| **OKG**           | 0.03    | 0.16    | 0.73    | 6.3          | 8.7     | 6.1          | **4%**  |
+| *TalkHier (Ours)* | **0.04** | **0.20** | **0.91** | **8.6** | **8.9** | 6.2 | **4%** |
+
 ## Ablative Results on Main Components of *TalkHier*
 
 The table presents accuracy (%) across Physics, ML, and Moral domains.  
