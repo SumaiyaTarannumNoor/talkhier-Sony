@@ -156,3 +156,17 @@ To test the system with a predefined task:
 ```sh
 python experiments.py --mode moral_scenario
 ```
+
+## License
+This project is licensed under the [Attribution-NonCommercial 4.0 International Lisence](https://creativecommons.org/licenses/by-nc/4.0/legalcode.en).
+
+## Contributing
+Contributions are welcome! Please fork the repository and submit a pull request for any improvements or bug fixes.
+
+## Contact
+For any questions or issues, feel free to reach out: Zhao.Wang@sony.com or this github repo for any information.
+
+## Cite
+If you use or reference OKG or the keyword dataset, please cite us with the following BibTeX entry:
+
+
