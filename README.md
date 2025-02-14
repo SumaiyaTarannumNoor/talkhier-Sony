@@ -60,6 +60,20 @@ We report **BLEU-4 (B4), ROUGE-1 (R1), BERTScore (BERT), and domain-specific met
 | **OKG**           | 0.03    | 0.16    | 0.73    | 6.3          | 8.7     | 6.1          | **4%**  |
 | *TalkHier (Ours)* | **0.04** | **0.20** | **0.91** | **8.6** | **8.9** | 6.2 | **4%** |
 
+## Ablative Results: Accuracy (%) Across Physics, ML, and Moral Domains
+
+The study examines the impact of removing components from the structured communication protocol:  
+- **Message (\(\mathbf{M}_{ij}\))**  
+- **Background (\(\mathbf{B}_{ij}\))**  
+- **Intermediate Output (\(\mathbf{I}_{ij}\))**
+
+| **Models**                 | **Moral** | **Phys.** | **ML**  | **Avg.**  |
+|----------------------------|---------|---------|------|------|
+| w/o **\(\mathbf{I}_{ij}\)** | 81.56   | 90.20   | 75.89 | 82.55 |
+| w/o **\(\mathbf{B}_{ij}\)** | 76.87   | 87.50   | 70.54 | 78.30 |
+| w/o **\(\mathbf{B}_{ij}, \mathbf{I}_{ij}\)** | 77.99 | 90.20 | 78.57 | 82.25 |
+| *TalkHier (Ours)*          | **83.80** | **93.14** | **83.04** | **86.66** |
+
 ## Ablative Results on Main Components of *TalkHier*
 
 The table presents accuracy (%) across Physics, ML, and Moral domains.  
