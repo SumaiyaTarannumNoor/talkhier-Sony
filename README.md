@@ -34,6 +34,20 @@ The table reports accuracy (%) for various baselines across Moral Scenario (Mora
 | o1-preview | 82.57   | 91.17   | **85.71** | 91.20 | **95.00** | 89.13 |
 | ***TalkHier (Ours)*** | **83.80** | **93.14** | 83.04 | **94.40** | 93.00 | **89.48** |
 
+## Evaluation Results on WikiQA
+
+The table reports **Rouge-1** and **BERTScore** for various models.
+
+| **Models**         | **Rouge-1** | **BERTScore** |
+|--------------------|------------|--------------|
+| GPT4o            | 0.2777     | 0.5856       |
+| ReAct            | 0.2409     | 0.5415       |
+| AutoGPT      | 0.3286     | 0.5885       |
+| AgentVerse   | 0.2799     | 0.5716       |
+| AgentPrune   | 0.3027     | 0.5788       |
+| GPTSwarm     | 0.2302     | 0.5067       |
+| o1-preview  | 0.2631     | 0.5701       |
+| ***TalkHier (Ours)***| **0.3461** | **0.6079**   |
 
 ## Ablative Results on Main Components of *TalkHier*
 
