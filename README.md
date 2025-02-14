@@ -19,14 +19,14 @@ The table reports accuracy (%) for various baselines across Moral Scenario (Mora
 
 | **Models**       | **Moral** | **Phys.** | **ML**  | **FL**  | **UFP**  | **Avg.**  |
 |-----------------|---------|---------|------|------|------|------|
-| GPT4o          | 64.25   | 62.75   | 67.86 | 63.49 | 92.00 | 70.07 |
-| GPT4o-3@       | 65.70   | 62.75   | 66.07 | 66.67 | 91.00 | 70.44 |
-| GPT4o-5@       | 66.15   | 61.76   | 66.96 | 66.67 | 92.00 | 70.71 |
-| GPT4o-7@       | 65.81   | 63.73   | 66.96 | 68.25 | 91.00 | 71.15 |
-| ReAct          | 69.61   | 72.55   | 59.82 | 32.54 | 58.00 | 58.50 |
-| ReAct-3@       | 74.75   | 83.33   | 66.07 | 52.38 | 53.00 | 65.91 |
-| ReAct-5@       | 74.97   | 82.35   | 66.96 | 46.83 | 63.00 | 66.82 |
-| ReAct-7@       | 75.53   | 84.78   | 67.86 | 50.79 | 57.00 | 67.19 |
+| GPT4o      | 64.25   | 62.75   | 67.86 | 63.49 | 92.00 | 70.07 |
+| GPT4o-3@   | 65.70   | 62.75   | 66.07 | 66.67 | 91.00 | 70.44 |
+| GPT4o-5@   | 66.15   | 61.76   | 66.96 | 66.67 | 92.00 | 70.71 |
+| GPT4o-7@   | 65.81   | 63.73   | 66.96 | 68.25 | 91.00 | 71.15 |
+| ReAct      | 69.61   | 72.55   | 59.82 | 32.54 | 58.00 | 58.50 |
+| ReAct-3@   | 74.75   | 83.33   | 66.07 | 52.38 | 53.00 | 65.91 |
+| ReAct-5@   | 74.97   | 82.35   | 66.96 | 46.83 | 63.00 | 66.82 |
+| ReAct-7@   | 75.53   | 84.78   | 67.86 | 50.79 | 57.00 | 67.19 |
 | AutoGPT    | 66.37   | 78.43   | 64.29 | 60.83 | 90.00 | 71.98 |
 | AgentVerse | 79.11   | 93.14   | 79.46 | 78.57 | 88.00 | 83.66 |
 | GPTSwarm   | 60.48   | 67.70   | 72.32 | 68.33 | 57.00 | 65.17 |
@@ -34,6 +34,21 @@ The table reports accuracy (%) for various baselines across Moral Scenario (Mora
 | o1-preview | 82.57   | 91.17   | **85.71** | 91.20 | **95.00** | 89.13 |
 | ***TalkHier (Ours)*** | **83.80** | **93.14** | 83.04 | **94.40** | 93.00 | **89.48** |
 
+
+## Ablative Results on Main Components of *TalkHier*
+
+The table presents accuracy (%) across Physics, ML, and Moral domains.  
+- *TalkHier* w/o Eval. Sup. removes the evaluation supervisor.  
+- *TalkHier* w/o Eval. Team excludes the evaluation team component.  
+- *TalkHier* w. Norm. Comm uses a normalized communication protocol.
+
+| **Models**               | **Moral** | **Phys.** | **ML**  | **Avg.**  |
+|--------------------------|---------|---------|------|------|
+| w/o Eval. Sup.          | 83.57   | 87.25   | 74.77 | 81.86 |
+| w/o Eval. Team          | 73.54   | 80.34   | 74.56 | 76.15 |
+| w. Norm. Comm           | 82.91   | 88.24   | 82.14 | 84.43 |
+| React (Single Agent)    | 69.61   | 72.55   | 59.82 | 67.33 |
+| ***TalkHier (Ours)***   | **83.80** | **93.14** | **83.04** | **86.66** |
 
 ## Installation
 
