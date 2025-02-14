@@ -207,7 +207,6 @@ class AgentTeam():
     def prompt(state, config, graph, team_name, sup_name, fullshared_memory):
         int_output = {}
         color_assign = colors.TerminalColor()
-        # state["history"][team_name + " Supervisor"][-1].content = "Input Message:\n\n" + state["history"][team_name + " Supervisor"][-1].content
         prev_len = len(state["history"][team_name + " Supervisor"])
 
         if "initial_prompt" in state:
@@ -247,9 +246,6 @@ class AgentTeam():
                 if result["next"] != sup_name:
                     print("Background:")
                     print(color_assign.colorText(str(result["background"].content), key))
-                    # print()
-                    # print("Intermediate output:")
-                    # print(color_assign.colorText(str(result["intermediate_output"]), key))
                     print()
                     if key != result["next"]:
                         print(color_assign.colorText(key, key), "->", color_assign.colorText(result["next"], result["next"]))
@@ -322,7 +318,6 @@ class ReactAgent():
         if not fullshared_memory:
             state["initial_prompt"] = "Prompter: " + prev_history[name][-1].name + "\n" + prev_history[name][-1].content
         
-        # state["intermediate_output"] = json.dumps(json.dumps(state["intermediate_output"]))
 
         prev_len = len(state["messages"])
 
@@ -390,7 +385,7 @@ def buildTeam(team_information, react_generator, intermediate_output_desc, int_o
     team_list = []
     member_info = []
     member_names = []
-    
+
     for key in team_information.keys():
         if isinstance(team_information[key], dict):
             if "team" in team_information[key]:

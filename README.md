@@ -44,22 +44,14 @@ This will use the `Dockerfile` to build the necessary environment and start the 
 ## Usage
 To run the system, execute the following command:
 ```sh
-python main.py --config config.yaml
+python experiments.py --mode [Problem]
 ```
 
-## Usage
-To run the system, execute the following command:
-```sh
-python main.py --config config.yaml
-```
 ### Configuration
-Modify `config.yaml` to adjust parameters such as:
-- Number of agents per team
-- Communication structure
-- Task-specific settings
+Modify `config/config_llm.ini` and add the keys.
 
 ## Examples
 To test the system with a predefined task:
 ```sh
-python main.py --mode moral_scenario
+python experiments.py --mode moral_scenario
 ```

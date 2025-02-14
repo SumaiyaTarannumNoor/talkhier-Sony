@@ -4,6 +4,7 @@ USER root
 RUN apt-get update
 RUN apt-get -y install locales && \
     localedef -f UTF-8 -i ja_JP ja_JP.UTF-8
+RUN apt-get -y install screen
 ENV LANG ja_JP.UTF-8
 ENV LANGUAGE ja_JP:ja
 ENV LC_ALL ja_JP.UTF-8
@@ -12,25 +13,4 @@ ENV TERM xterm
 ENV MECABRC /etc/mecabrc
 
 RUN apt-get install -y vim less
-RUN pip install --upgrade pip
-RUN pip install --upgrade setuptools
-RUN pip install openai
-
-RUN python -m pip install jupyterlab
-
-RUN python -m pip install langchain_openai==0.2.2
-RUN python -m pip install google-search-results
-RUN python -m pip install pandas
-RUN python -m pip install langgraph
-RUN python -m pip install langchain_community
-RUN python -m pip install faiss-cpu
-RUN python -m pip install datasets
-RUN python -m pip install langchain-experimental
-
-RUN apt install mecab libmecab-dev mecab-ipadic-utf8 -y
-RUN python -m pip install mecab-python3
-RUN python -m pip install rouge_score
-RUN python -m pip install nltk
-RUN python -m pip install bert_score
-RUN python -m pip install transformers
-RUN python -m pip install eval
+RUN pip install --no-cache-dir -r /root/TalkHier/requirements.txt

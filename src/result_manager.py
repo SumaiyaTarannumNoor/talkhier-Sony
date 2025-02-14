@@ -3,7 +3,7 @@ import os
 
 class ResultManager:
 
-    def __init__(self, file_path, columns=["Problem ID", "Answer", "Correct Answer"]):
+    def __init__(self, file_path, columns=["Problem ID", "Answer", "Correct Answer", "Pre-Revision"]):
         self.file_path = file_path
         self.columns = columns
         self.results_list = []
@@ -11,12 +11,13 @@ class ResultManager:
 
     def loadFile(self):
         if os.path.exists(self.file_path):
-            self.results_list = pd.read_csv().values.tolist()
+            self.results_list = pd.read_csv(self.file_path).values.tolist()
         else:
+            os.makedirs(os.path.dirname(self.file_path), exist_ok=True)
             self.results_list = []
     
     def saveFile(self):
-        pd.DataFrame(self.results_list, columns=self.columns).to_csv(self.file_path)
+        pd.DataFrame(self.results_list, columns=self.columns).to_csv(self.file_path, index=False)
     
 
     def add(self, data):
@@ -36,6 +37,9 @@ class ResultManager:
         self.saveFile()
     
 
-    def is_present(self, data):
+    def is_present(self, data, axis=0):
         self.loadFile()
-        return data in self.results_list
+        for read_data in self.results_list:
+            if read_data[axis] == data[axis]:
+                return True
+        return False

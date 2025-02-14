@@ -1,6 +1,8 @@
 import configparser
 import argparse
 import shutil, os
+import ast
+import atexit
 
 from result_manager import ResultManager
 import multiagent.agent_team as agent_team
@@ -19,11 +21,38 @@ def mmlu(problem, prompt, config):
     team = agent_team.buildTeam(prompt["team"], react_generator, prompt["intermediate_output_desc"], prompt["int_out_format"])
 
     from langchain_core.messages import HumanMessage
-    output = team(state = {"history": {"Default Supervisor": [HumanMessage(content=prompt["team"]["prompt"])], "all": [HumanMessage(content=prompt["team"]["prompt"])]}, "intermediate_output": {}},
-    config = {"recursion_limit": int(config["LLM"]["max_attempts"])})
+
+    iterations = 0
+    while iterations < 10:
+        try:
+            output = team(state = {"history": {"Default Supervisor": [HumanMessage(content=prompt["team"]["prompt"])], "all": [HumanMessage(content=prompt["team"]["prompt"])]}, "intermediate_output": {}},
+            config = {"recursion_limit": int(config["LLM"]["max_attempts"])})
+            break
+        except Exception as e:
+            print(e)
+            print("Retrying...")
 
 
+    if isinstance(output, list):
+        output, output_int = output[0]["intermediate_output"], output[1]
+    else:
+        print(output)
+        output = ast.literal_eval(output["messages"][-1].content)
 
+    choice = -1
+    if "choice" in output:
+        choice = output["choice"]
+    elif "choice" in output["answer"]:
+        choice = output["answer"]["choice"]
+    
+    choice2 = -1
+    if output_int is not None and output_int != {}:
+        if "choice" in output_int:
+            choice2 = output_int["choice"]
+        elif "choice" in output_int["answer"]:
+            choice2 = output_int["answer"]["choice"] 
+    
+    return choice, choice2
 
 
 
@@ -31,18 +60,27 @@ def mmlu(problem, prompt, config):
 
 
 def runExperimentMMLU(file_path, domain, config):
+    
     from datasets import load_dataset
-
     dataset = load_dataset("cais/mmlu", domain)
-    results = ResultManager(file_path, columns=["Problem ID", "Answer", "Correct Answer"])
+    results = ResultManager(file_path, columns=["Problem ID", "Answer", "Correct Answer", "Pre-Revision"])
 
     for problem_id in range(len(dataset["test"])):
-        placeholder = [problem_id, '-', '-']
+        placeholder = [problem_id, '-', '-', '-']
+
         if not results.is_present(placeholder):
+
+            def remove_checkpoint():
+                results.remove(placeholder)
+
             results.add(placeholder)
+            atexit.register(remove_checkpoint)
+
             problem = dataset["test"][problem_id]
             answer = mmlu(problem, MMLUPrompt.getPrompts(domain, problem), config)
-            results.replace(placeholder, [problem_id, answer, dataset["test"]["answer"]])
+
+            results.replace(placeholder, [problem_id, answer[0], problem["answer"], answer[1]])
+            atexit.unregister(remove_checkpoint)
 
 
 
@@ -51,7 +89,12 @@ def runSingleMMLU(domain, config, problem_id):
     dataset = load_dataset("cais/mmlu", domain)
     problem = dataset["test"][problem_id]
 
-    mmlu(problem, MMLUPrompt.getPrompts(domain, problem), config)
+    output = mmlu(problem, MMLUPrompt.getPrompts(domain, problem), config)
+    print("Agent Answer:", output[0])
+    print("Agent Answer before Revision:", output[1])
+    print("Actual Answer:", problem["answer"])
+
+
 
 
 def loadConfig(path, path2):
@@ -115,6 +158,11 @@ if __name__ == "__main__":
 
     config = loadConfig(args.config, args.llm_config)
     mmlu_list = ["moral_scenarios", "college_physics", "machine_learning", "formal_logic", "us_foreign_policy"]
+    prefix = "proposed.csv"
+
     if args.problem_id != -1:
         if args.mode in mmlu_list:
             runSingleMMLU(args.mode, config, args.problem_id)
+    else:
+        if args.mode in mmlu_list:
+            runExperimentMMLU("../results/" + args.mode + "/" + prefix, args.mode, config)

@@ -1,25 +1,18 @@
 
 
-
-
-
-
-
 def getPrompts(domain, problem):
     choice_info = ""
     for i, x in enumerate(problem['choices']):
-        choice_info += f"{i}) {x}, "
+        choice_info += f"{i}) {x.replace("{", "{{").replace("}", "}}")}, "
     choice_info = choice_info[:-2]
 
     prompt = {}
+    tools = None
 
 
 
     if domain == "moral_scenarios":
-        output_format = "{{\"answer\": {{\"Scenario 1\": \"Wrong/Not Wrong\", ..., \"choice\": 0~" + str(i) + "}}}}"
-        int_out_format = "{{\"answer\": {{\"Scenario 1\": \"Wrong/Not Wrong\", ..., \"choice\": 0~" + str(i) + "}}}}. Choices are: " + choice_info
-        int_out_score_format = "{{\"answer\": {{\"Scenario 1\": \"Wrong/Not Wrong\", ..., \"choice\": 0~" + str(i) + "}}, \"evaluation\": {{ "\
-            "\"Name of Metric 1\": {{\"Scenario 1\": [\"Correct/Incorrect/Neutral\", \"Detailed Reason\"], ...}}}}}}. Choices are: " + choice_info
+        output_format = "{{\"answer\": {{\"Scenario 1\": \"Wrong/Not Wrong\", ..., \"choice\": 0~" + str(i) + "}}"
         domain_name = "Moral Scenarios"
 
         eteam_member_names = ["Intent", "Normality", "Responsibility", "Well-being"]
@@ -29,7 +22,61 @@ def getPrompts(domain, problem):
                         "Does the action promote or harm the well-being of EVERYONE involved? Morally correct actions tend to significantly enhance the health, happiness, and safety. **IMPORTANT**: DO NOT THINK ABOUT INTENT/WILL/ORDINARY MORAL STANDARDS",
                         ]
     
+        
+    elif domain == "college_physics":
+        output_format = "{{\"answer\": {{\"steps\": Intermediate Steps, \"choice\": 0~" + str(i) + "}}"
+        domain_name = "College Physics"
+
+        eteam_member_names = ["Physics", "Mathematics"]
+        explanations = ["Whether the answer does not have any mistakes regarding physics. Make sure to check that there are no assumptions that are overlooked",
+                        "Whether the answer does not have any mistakes regarding mathematics. Make sure that the logical steps and calculations are correct"
+                        ]
+        
+    elif domain == "machine_learning":
+        output_format = "{{\"answer\": {{\"choice\": 0~" + str(i) + ", \"Statement 1\": ...}}"
+        domain_name = "Machine Learning"
+
+        eteam_member_names = ["Assumptions", "Machine Learning"]
+        explanations = ["The assumptions. List up all possible AND normally used assumptions regarding the problem, and determine if they are used properly in the answer",
+                        "Whether the answer does not have any mistakes regarding machine learning terminologies. Make a list of machine learning terminologies used with explanations, and determine if they might have been mis-interpreted",
+                        ]
     
+
+    elif domain == "formal_logic":
+        output_format = "{{\"answer\": {{\"choice\": 0~" + str(i) + ", \"Reason\": ...}}"
+        domain_name = "Formal Logic"
+
+        eteam_member_names = ["Logical Evaluator", "Truth Table Evaluator"]#, "Counterexample Evaluator"]
+        explanations = ["Whether there are no logically mistaken steps to gain the current answer.",
+                        
+                        "Whether the truth table is used correctly.\n"\
+                        "1. Verify whether the truth-table is used correctly.\n"
+                        "2. Make sure to use the truth table generator tool, and give the list of all formulas as input, in the form of: ['formula 1', 'formula 2', ...].\n"
+                        "Important: If a truth table is not required for solving this problem, make sure to return 'N/A' as the evaluation result.",
+
+                        "Whether the counter example is valid. Make sure to only check the certain counterexample, and not output the full truth table."
+                        " Note that to be a counterexample, both premises must be true, and the conclusion must be false."
+                        ]
+        tools = [[4], [4,8], [4]]
+
+
+    elif domain == "us_foreign_policy":
+        output_format = "{{\"answer\": {{\"choice\": 0~" + str(i) + ", \"reason\": ...}}"
+        domain_name = "US Foreign Policy"
+
+        eteam_member_names = ["Factual Accuracy", "US Foreign Policy"]
+        explanations = ["Whether the facts implied by the answer is correct. Make sure to list what facts could be implied from the answer first",
+                        "You are a US Foreign Policy expert, that works for the US government. From your point of view, check whether the answer has enough evidence to be determined as true"
+                        ]
+
+    
+    
+    
+    if tools is None:
+        tools = [[4]] * len(eteam_member_names)
+
+    int_out_format = output_format + "}}. Choices are: " + choice_info
+    int_out_score_format = output_format + ", \"evaluation\": {{ \"Name of Evaluator 1\": [\"Correct/Incorrect/Neutral\", \"Detailed Reason\"], ...}}}}. Choices are: " + choice_info
 
 
     in_out = ["Required Input: Requirements as 'messages', Final output: Expected answer as 'intermediate_output' in the form of " + int_out_format + ".",
@@ -61,16 +108,18 @@ def getPrompts(domain, problem):
                             "\n4. Looking at the interpretations, state which one MOST people who perform the exact action would be thinking of."\
                             "\n5. Make an extremely CRITICAL evaluation for each answer using ONLY the INTENDED interpretation."\
                             "\n6. Evaluation of most recent answer: Analyze the most recently given intermediate output, and explain in detail whether your thoughts align with the answer."\
-                            "" + in_out[3] + "", "tools": [4]}
+                            "" + in_out[3] + "", "tools": tools[i]}
 
-    prompt_input = "You are an expert in {domain}. You must find the answer to the following question:\n" + problem['question'] + \
+    
+    prompt_input = "You are an expert in " + domain_name + ". You must find the answer to the following question:\n" + problem['question'] + \
         "\nThe choices you are given are:\n" + choice_info + "\n"\
         "You can split up the problems into smaller parts if required. Furthermore, you should use tools to lookup things you need." + \
-        " The final answer must be only in the dictionary form of: {output_format}"
+        " The final answer must be only in the dictionary form of: " + output_format
+    
     team_info = {
         "team": "Default",
         "return": "FINISH",
-        "prompt": prompt_input.format(domain=domain_name, output_format=output_format),
+        "prompt": prompt_input,
         "additional_prompt": "Important: \n1. First, MAKE SURE to ask the **Answer Generator** to generate an answer."\
                             "\n2. If a re-evaluation is required, make sure to state which parts are modified to the evaluator."\
                             "\n3. You must contact the revisor before reporting back to {finish}."\
