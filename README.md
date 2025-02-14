@@ -52,9 +52,13 @@ python experiments.py --mode [Problem]
 Modify `config/config_llm.ini` and add the keys.
 
 [KEYS]
+
 SERPAPI_API_KEY = *************************************
+
 OPENAI_API_KEY = *************************************
+
 OPENAI_ENDPOINT = *************************************
+
 **Need to replace your own key**
 
 ## Examples
