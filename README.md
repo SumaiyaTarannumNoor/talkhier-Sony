@@ -5,7 +5,7 @@ This repository contains the official implementation of the multi-agent LLM syst
 
 ## Architecture
 ![Example Figure](./architecture.png)
-
+Figure 1: Comparisons between existing approaches (left) and ours (right). Our \textit{TalkHier} propose a new communication protocol (first row) featuring context-rich and well-structured communication information, along with a collaborative hierarchical refinement (second row) where evaluations provide summarized and coordinated feedback within an LLM-MA framework
 
 ***TalkHier*** consists of two types of agents:
 - **Supervisor Agents**: Responsible for selecting which member agent should communicate next.
