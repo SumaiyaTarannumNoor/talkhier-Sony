@@ -31,8 +31,8 @@ The table reports accuracy (%) for various baselines across Moral Scenario (Mora
 | AgentVerse | 79.11   | 93.14   | 79.46 | 78.57 | 88.00 | 83.66 |
 | GPTSwarm   | 60.48   | 67.70   | 72.32 | 68.33 | 57.00 | 65.17 |
 | AgentPrune | 70.84   | 91.18   | 81.25 | 81.75 | 93.00 | 83.60 |
-| o1-preview | 82.57   | 91.17   | **85.71** | 91.20 | **95.00** | 89.13 |
-| ***TalkHier (Ours)*** | **83.80** | **93.14** | 83.04 | **94.40** | 93.00 | **89.48** |
+| o1-preview | 82.57   | 91.17   | **85.71** | 83.33 | **95.00** | 87.56 |
+| ***TalkHier (Ours)*** | **83.80** | **93.14** | 84.68 | **84.13** | 93.00 | **87.75** |
 
 ## Evaluation Results on WikiQA
 
