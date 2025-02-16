@@ -32,7 +32,7 @@ The table reports accuracy (%) for various baselines across Moral Scenario (Mora
 | GPTSwarm   | 60.48   | 67.70   | 72.32 | 68.33 | 57.00 | 65.17 |
 | AgentPrune | 70.84   | 91.18   | 81.25 | 81.75 | 93.00 | 83.60 |
 | o1-preview | 82.57   | 91.17   | **85.71** | 83.33 | **95.00** | 87.56 |
-| ***TalkHier (Ours)*** | **83.80** | **93.14** | 84.68 | **84.13** | 93.00 | **87.75** |
+| ***TalkHier (Ours)*** | **83.80** | **93.14** | 84.68 | **87.30** | 93.00 | **88.38** |
 
 ## Evaluation Results on WikiQA
 
@@ -72,7 +72,7 @@ The study examines the impact of removing components from the structured communi
 | w/o **\(\mathbf{I}_{ij}\)** | 81.56   | 90.20   | 75.89 | 82.55 |
 | w/o **\(\mathbf{B}_{ij}\)** | 76.87   | 87.50   | 70.54 | 78.30 |
 | w/o **\(\mathbf{B}_{ij}, \mathbf{I}_{ij}\)** | 77.99 | 90.20 | 78.57 | 82.25 |
-| *TalkHier (Ours)*          | **83.80** | **93.14** | **83.04** | **86.66** |
+| *TalkHier (Ours)*          | **83.80** | **93.14** | **84.68** | **87.21** |
 
 ## Ablative Results on Main Components of *TalkHier*
 
@@ -87,8 +87,7 @@ The table presents accuracy (%) across Physics, ML, and Moral domains.
 | w/o Eval. Team          | 73.54   | 80.34   | 74.56 | 76.15 |
 | w. Norm. Comm           | 82.91   | 88.24   | 82.14 | 84.43 |
 | React (Single Agent)    | 69.61   | 72.55   | 59.82 | 67.33 |
-| ***TalkHier (Ours)***   | **83.80** | **93.14** | **83.04** | **86.66** |
-
+| ***TalkHier (Ours)***   | **83.80** | **93.14** | **84.68** | **87.21** |
 ## Installation
 
 ### Manual Installation
