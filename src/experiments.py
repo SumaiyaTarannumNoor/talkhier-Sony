@@ -4,6 +4,10 @@ import shutil, os
 import ast
 import atexit
 
+from functools import partial
+import time
+import threading
+
 from result_manager import ResultManager
 import multiagent.agent_team as agent_team
 from multiagent.llm import LLM
@@ -58,7 +62,6 @@ def mmlu(problem, prompt, config):
 
 
 
-
 def runExperimentMMLU(file_path, domain, config):
     
     from datasets import load_dataset
@@ -66,33 +69,54 @@ def runExperimentMMLU(file_path, domain, config):
     results = ResultManager(file_path, columns=["Problem ID", "Answer", "Correct Answer", "Pre-Revision"])
 
     for problem_id in range(len(dataset["test"])):
-        placeholder = [problem_id, '-', '-', '-']
-
-        if not results.is_present(placeholder):
-
-            def remove_checkpoint():
-                results.remove(placeholder)
-
-            results.add(placeholder)
-            atexit.register(remove_checkpoint)
-
-            problem = dataset["test"][problem_id]
-            answer = mmlu(problem, MMLUPrompt.getPrompts(domain, problem), config)
-
-            results.replace(placeholder, [problem_id, answer[0], problem["answer"], answer[1]])
-            atexit.unregister(remove_checkpoint)
+        runSingleMMLU(domain, config, problem_id, results=results)
 
 
 
-def runSingleMMLU(domain, config, problem_id):
+def runSingleMMLU(domain, config, problem_id, results=None):
     from datasets import load_dataset
     dataset = load_dataset("cais/mmlu", domain)
     problem = dataset["test"][problem_id]
+
+    if results is not None:
+        placeholder = [problem_id, '-', '-', '-']
+        if results.is_present(placeholder):
+            return
+        def remove_checkpoint():
+            results.remove(placeholder)
+
+        results.add(placeholder)
+        atexit.register(remove_checkpoint)
 
     output = mmlu(problem, MMLUPrompt.getPrompts(domain, problem), config)
     print("Agent Answer:", output[0])
     print("Agent Answer before Revision:", output[1])
     print("Actual Answer:", problem["answer"])
+
+    if results is not None:
+        results.replace(placeholder, [problem_id, output[0], problem["answer"], output[1]])
+        atexit.unregister(remove_checkpoint)
+
+
+
+
+
+
+def runParallel(function, threads):
+    thread_list = []
+
+    for i in range(threads):
+        print("Starting thread:", i)
+        t = threading.Thread(target=function)
+        t.start()
+        thread_list.append(t)
+        time.sleep(1)
+
+    for t in thread_list:
+        t.join()
+
+
+
 
 
 
@@ -165,4 +189,4 @@ if __name__ == "__main__":
             runSingleMMLU(args.mode, config, args.problem_id)
     else:
         if args.mode in mmlu_list:
-            runExperimentMMLU("../results/" + args.mode + "/" + prefix, args.mode, config)
+            runParallel(partial(runExperimentMMLU, "../results/" + args.mode + "/" + prefix, args.mode, config), args.thread_count)

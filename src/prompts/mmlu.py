@@ -36,38 +36,81 @@ def getPrompts(domain, problem):
         output_format = "{{\"answer\": {{\"choice\": 0~" + str(i) + ", \"Statement 1\": ...}}"
         domain_name = "Machine Learning"
 
-        eteam_member_names = ["Assumptions", "Machine Learning"]
-        explanations = ["The assumptions. List up all possible AND normally used assumptions regarding the problem, and determine if they are used properly in the answer",
-                        "Whether the answer does not have any mistakes regarding machine learning terminologies. Make a list of machine learning terminologies used with explanations, and determine if they might have been mis-interpreted",
-                        ]
+        eteam_member_names = ["Answer Consistency", "Machine Learning", "Statistical Soundness"]
+
+        explanations = [
+            "The Answer Consistency Evaluator ensures that the selected answer choice correctly aligns with the explanation. It verifies that:\n"
+            "1. The choice number accurately matches the explanation provided.\n"
+            "2. If uncertainty is mentioned (e.g., the need for further checks), the choice must reflect that uncertainty.\n"
+            "3. A definitive choice cannot be selected unless the explanation provides full justification.\n"
+            "4. If the explanation suggests that additional verification (such as statistical significance tests) is necessary, then the correct choice should reflect that requirement.\n"
+            "If inconsistencies are found, this evaluator provides feedback on what is mismatched and how to correct it.",
+
+            "The Machine Learning Evaluator ensures that the answer applies ML concepts correctly. It checks:\n"
+            "1. Whether the explanation justifies the choice using correct ML reasoning.\n"
+            "2. If feature importance is determined correctly (considering factors like multicollinearity, overfitting, and regularization).\n"
+            "3. If the explanation ignores key aspects of ML models, such as feature interaction effects or confounding variables.\n"
+            "4. If additional statistical or empirical checks are required before concluding, it ensures the answer does not claim definitiveness too early.\n"
+            "It explicitly marks answers as incorrect if they overlook these essential considerations.",
+
+            "The Statistical Soundness Evaluator ensures that the answer is statistically valid. It verifies:\n"
+            "1. Whether the interpretation of statistical measures (such as coefficients in linear regression) is accurate.\n"
+            "2. If conclusions are drawn **without checking necessary statistical conditions**, such as p-values, variance inflation factors (VIF), or cross-validation.\n"
+            "3. If the answer does not acknowledge potential sources of error (e.g., spurious correlations, omitted variable bias, or confounding).\n"
+            "4. If the explanation incorrectly suggests a direct causal relationship instead of a statistical association.\n"
+            "This evaluator explicitly penalizes definitive conclusions that ignore these statistical checks and suggests a more appropriate choice if necessary."
+        ]
+
+
+
+                        
     
 
     elif domain == "formal_logic":
         output_format = "{{\"answer\": {{\"choice\": 0~" + str(i) + ", \"Reason\": ...}}"
         domain_name = "Formal Logic"
 
-        eteam_member_names = ["Logical Evaluator", "Truth Table Evaluator"]#, "Counterexample Evaluator"]
-        explanations = ["Whether there are no logically mistaken steps to gain the current answer.",
-                        
-                        "Whether the truth table is used correctly.\n"\
+        eteam_member_names = ["Truth Table", "Counterexample", "Predicate Logic", "Logical Argument", "Formal Logic"]
+        explanations = ["Whether the truth table is used correctly, if and only if a truth table is used.\n"\
                         "1. Verify whether the truth-table is used correctly.\n"
-                        "2. Make sure to use the truth table generator tool, and give the list of all formulas as input, in the form of: ['formula 1', 'formula 2', ...].\n"
+                        "2. Make sure to use the truthtable_generator tool, and give the list of all formulas as input, in the form of: ['formula 1', 'formula 2', ...].\n"\
+                        "3. Check the outputs of the tool, and check the statement on whether they are contradictory or not before making the final evaluation."
                         "Important: If a truth table is not required for solving this problem, make sure to return 'N/A' as the evaluation result.",
 
-                        "Whether the counter example is valid. Make sure to only check the certain counterexample, and not output the full truth table."
-                        " Note that to be a counterexample, both premises must be true, and the conclusion must be false."
+                        "1. Check if a counterexample is required. If not, return with N/A as the correctness score."\
+                        "2. Check all counterexamples, and find out which one is correct, and give that as the evaluation result."\
+                        "When using the counterexample validator, give the input as a string in the form of: {{\"premises\": [Formula 1, ...], \"conclusion\": Formula, \"truth_values\": [{{variable1: \"True/False\", ...}}, ...]}}."\
+                        "Furthermore, the tool uses SymPy-style logical operators: And(A, B), Or(A, B), Not(A), Implies(A, B), Equivalent(A, B). Make sure to give True False as a string."
+                        ,
+                        "You are a Predicate Logic Evaluator, ensuring that logical translations strictly adhere to predicate logic notation and accurately represent their intended meaning. Your task is to validate the syntactic correctness, semantic accuracy, and logical consistency of given translations.\n"\
+                        "Common Mistake Prevention:\n"
+                        "Incorrect Notation: Predicate logic follows the format of having the operation (normally in capital alphabets) first. For example, with the operation L and variables x and y, it becomes Lxy.\n"
+                        ,
+                        "This evaluator assesses the logical structure of arguments to ensure that the identified conclusion is correct. It verifies that:\n"
+                        "Premises and Conclusion Alignment - The conclusion is the main claim supported by the premises, not just a restatement or a minor detail."
+                        "Logical Flow - The reasoning follows a valid logical structure, where supporting statements lead to the identified conclusion."
+                        "Choice-Justification Consistency - The chosen conclusion is correctly justified based on the given argument.",
+                        "Formal Logic Evaluator: The Formal Logic Evaluator ensures that translations from natural language into predicate logic are syntactically correct and semantically accurate. It checks that quantifiers, connectives, and predicates are used properly to reflect the original meaning, including handling negations and implications correctly. Examples: 1. Correct Quantifier Use: 'All students study' → (∀x)(Sx → Tx) - Ensures the universal quantifier (∀x) applies correctly. 2. Negation Handling: 'No student fails without studying' → (∀x)(Sx ⊃ ~Fx) - Verifies negations are correctly placed. 3. Implication Handling: 'If it rains, the ground gets wet' → (∀x)(Rx → Gx) - Ensures causality is captured properly. 4. Logical Consistency: 'Some students fail the exam' → (∃x)(Sx ∧ Fx) - Checks the correct use of existential quantifiers for 'some.' The evaluator ensures that the logical structure aligns with the original sentence without errors in interpretation."
                         ]
-        tools = [[4], [4,8], [4]]
+        tools = [[4,8], [4,9], [4], [4],[4]]
 
 
     elif domain == "us_foreign_policy":
         output_format = "{{\"answer\": {{\"choice\": 0~" + str(i) + ", \"reason\": ...}}"
         domain_name = "US Foreign Policy"
+        eteam_member_names = ["Factual Accuracy", "Policy Alignment", "Conceptual Clarity"]
+        explanations = [
+            "Factual Accuracy Evaluator: This evaluator verifies whether the facts implied by the answer are correct. "
+            "List the key facts implied in the response first, then assess their correctness using historical and economic records."
+            "\nIf there is an option stating all of the above, then make sure to check the possibility of all other options being true.",
 
-        eteam_member_names = ["Factual Accuracy", "US Foreign Policy"]
-        explanations = ["Whether the facts implied by the answer is correct. Make sure to list what facts could be implied from the answer first",
-                        "You are a US Foreign Policy expert, that works for the US government. From your point of view, check whether the answer has enough evidence to be determined as true"
-                        ]
+            "Policy Alignment Evaluator: This evaluator assesses whether the answer aligns with established policies and agreements. "
+            "It checks if the reasoning is consistent with documented policy frameworks, economic agreements, and diplomatic history.",
+
+            "Conceptual Clarity Evaluator: This evaluator ensures that the answer accurately represents the core definition, scope, and distinguishing features "
+            "of the concept being tested. It verifies that responses are not just factually correct but also logically sound, free from misinterpretations, and "
+            "select the most comprehensive and justified answer choice."
+        ]
 
     
     
@@ -76,7 +119,9 @@ def getPrompts(domain, problem):
         tools = [[4]] * len(eteam_member_names)
 
     int_out_format = output_format + "}}. Choices are: " + choice_info
-    int_out_score_format = output_format + ", \"evaluation\": {{ \"Name of Evaluator 1\": [\"Correct/Incorrect/Neutral\", \"Detailed Reason\"], ...}}}}. Choices are: " + choice_info
+    int_out_score_format = output_format + ", \"evaluation\": {{ \"Name of Evaluator\": {{\"Correctness Score\": Score out of 10, \"Reason\": reason}}, ...}}}}. Choices are: " + choice_info
+    if domain == "machine_learning":
+        int_out_score_format = output_format + ", \"evaluation\": {{ \"Name of Evaluator\": {{ \"Statement 1\":{{\"Correctness Score\": Score out of 10, \"Reason\": reason}}}}, ...}}}}. Choices are: " + choice_info
 
 
     in_out = ["Required Input: Requirements as 'messages', Final output: Expected answer as 'intermediate_output' in the form of " + int_out_format + ".",
@@ -132,7 +177,6 @@ def getPrompts(domain, problem):
                 "\n2. Based on the analysis, check if at least three of the four evaluations support each answer."\
                 "\n3. If an answer is not supported by the majority of evaluations, you must flip the specific answer, making sure to update the choices as well."\
                 "\n4. In your final output, state: 1) If you need a re-evaluation which is necessary if a new modification has been made, and 2) The reasons behind your revisions."\
-                "\nImportant: 1) DO NOT take into account ordinary moral standards, and ONLY take into account the EVALUATION RESULTS (CORRECT/NEUTRAL/INCORRECT), without including PERSONAL OPINIONS. 2) THE SCENARIOS MUST BE EVALUATED INDEPENDENTLY."\
                 "" + in_out[2], "tools": [4]},
         
         "Evaluator": eval_team_info
@@ -145,4 +189,15 @@ def getPrompts(domain, problem):
         "Everything MUST BE covered with double quotation marks with escape codes (backslash) as done so in the following example: {{\\\"key\\\": \\\"value\\\"}}."
     prompt["int_out_format"] = int_out_format
 
+
+
+    if domain == "formal_logic":
+        prompt["team"]["Evaluator"]["Truth Table"]["prompt"] = "You are a truth table evaluator. Evaluate using the following:\n" + explanations[0] + \
+            "\nFinal output: Expected answer (keep unmodified) and evaluation results embedded into 'intermediate_output' in the form of " + int_out_score_format + "."
+        prompt["team"]["Evaluator"]["Counterexample"]["prompt"] = "You are a counterexample evaluator. Evaluate using the following:\n" + explanations[1] + \
+            "\nFinal output: Expected answer (keep unmodified) and evaluation results embedded into 'intermediate_output' in the form of " + int_out_score_format + "."
+        prompt["team"]["Evaluator"]["additional_prompt"] += "\n5. Think of whether a truth-table or counterexample is involed first. If there is a truth-table involved, ask the Truth Table evaluator. If there is a conterexample involved, ask the Counterexample evaluator."
+        prompt["team"]["prompt"] += "\nOnly finish when all evaluation results are positive."
+        prompt["team"]["Revisor"]["tools"] += [8,9]
+        prompt["team"]["Revisor"]["prompt"] += "\nYou can use tools required to solve problems. Make sure to be careful of what is required for input."
     return prompt

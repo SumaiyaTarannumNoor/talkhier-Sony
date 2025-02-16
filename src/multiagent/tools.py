@@ -216,6 +216,75 @@ class TruthTableGenerator(BaseTool):
 
 
 
+class CounterexampleVerifier(BaseTool):
+    name: str = "counterexample_verifier"
+    description: str = "Verifies whether a given set of truth values serves as a counterexample to an argument. "\
+                        "Input consists of premises, a conclusion, and a dictionary specifying truth values for variables, in the form of: "\
+                        "{{\"premises\": [Premis1, ...], \"conclusion\": Conclusion, \"truth_values\": [{{variable1: \"True/False\", ...}}, ...]}}"\
+                        "Uses SymPy-style logical operators: And(A, B), Or(A, B), Not(A), Implies(A, B), Equivalent(A, B). Make sure to give True False as a string."
+
+    args_schema: Type[BaseModel] = SerpAPIInput
+    return_direct: bool = False
+
+    def _run(
+        self, in_str: str,
+        run_manager: Optional[CallbackManagerForToolRun] = None
+    ) -> str:
+        try:
+            expected_symbols = [
+                "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+            ]
+            local_dict = {name: symbols(name) for name in expected_symbols}
+            local_dict.update({
+                "~": Not,  # Negation
+                "&": And,  # Logical AND
+                "|": Or,   # Logical OR
+                ">>": Implies,  # Logical implication
+                "EQ": Equivalent  # Logical equivalence
+            })
+            in_dict = ast.literal_eval(in_str)
+            premises = in_dict["premises"]
+            if len(premises) == 0:
+                return "Empty premis, no evaluation possible."
+            conclusion = in_dict["conclusion"]
+
+            result = ""
+
+            print(in_dict["truth_values"])
+
+            for truth_value_list in in_dict["truth_values"]:
+                truth_values = truth_value_list
+                for key in truth_values.keys():
+                    if truth_values[key] in ["True", "true", "T"]:
+                        truth_values[key] = True
+                    else:
+                        truth_values[key] = False
+
+                # Parse the premises and conclusion
+                parsed_premises = [sympify(expr, locals=local_dict) for expr in premises]
+                parsed_conclusion = sympify(conclusion, locals=local_dict)
+
+                # Ensure the provided truth values match expected variables
+                all_variables = set().union(*(expr.free_symbols for expr in parsed_premises + [parsed_conclusion]))
+                var_dict = {str(var): truth_values[str(var)] for var in all_variables if str(var) in truth_values}
+
+                # Evaluate premises and conclusion under the given truth assignment
+                premises_results = [expr.subs(var_dict) for expr in parsed_premises]
+                conclusion_result = parsed_conclusion.subs(var_dict)
+
+                # Convert results to Boolean values
+                premises_truths = [bool(result) for result in premises_results]
+                conclusion_truth = bool(conclusion_result)
+
+                # A counterexample occurs when all premises are true and the conclusion is false
+                if all(premises_truths) and not conclusion_truth:
+                    result += "For " + str(truth_value_list) + ": Valid counterexample. The given truth values make all premises true and the conclusion false.\n"
+                else:
+                    result += "For " + str(truth_value_list) + ": Not a counterexample.The given truth values do not satisfy the conditions for a counterexample.\n"
+            return result
+        except Exception as e:
+            return f"Error processing expressions: {str(e)}"
+
 
 import csv
 class RejectWordTool(BaseTool):
@@ -343,6 +412,7 @@ def getTools(sel_tools, config):
     
     if 8 in sel_tools:
         agent_tools.append(TruthTableGenerator())
-
+    if 9 in sel_tools:
+        agent_tools.append(CounterexampleVerifier())
     return agent_tools
 
