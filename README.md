@@ -167,7 +167,7 @@ For any questions or issues, feel free to reach out: Zhao.Wang@sony.com or this 
 
 ## Cite
 If you use or reference ***TalkHier***, please cite us with the following BibTeX entry:
-```sh
+```bibtex
 @misc{wang2025talkhier,
       title={Talk Structurally, Act Hierarchically: A Collaborative Framework for LLM Multi-Agent Systems}, 
       author={Zhao Wang and Sota Moriyama and Wei-Yao Wang and Briti Gangopadhyay and Shingo Takamatsu},
@@ -177,5 +177,4 @@ If you use or reference ***TalkHier***, please cite us with the following BibTeX
       primaryClass={cs.AI},
       url={https://arxiv.org/abs/2502.11098}, 
 }
-```
 
