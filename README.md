@@ -177,6 +177,7 @@ If you use or reference ***TalkHier***, please cite us with the following BibTeX
       primaryClass={cs.AI},
       url={https://arxiv.org/abs/2502.11098}, 
 }
+```
 
 ## Star History
 
