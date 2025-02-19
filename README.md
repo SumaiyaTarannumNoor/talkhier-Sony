@@ -179,6 +179,4 @@ If you use or reference ***TalkHier***, please cite us with the following BibTeX
 }
 ```
 
-## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=sony/talkhier&type=Timeline)](https://star-history.com/#sony/talkhier&Timeline)
